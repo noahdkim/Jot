@@ -1,84 +1,84 @@
-import React, { Component } from 'react';
-import {Calendar as Cal} from 'react-calendar';
-import 'typeface-roboto';
 
 
 
-class Note extends Component {
-  constructor(props){
-    super(props);
-    this.onChange = date => this.setState({ date })
-  }
-  render(){
-    return(
-      <div>
-        {this.props.date}
-      </div>
-    );
-  }
 
-}
 
-class Calendar extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      date: props.date,
-    }
-    this.calendarType = props.calendarType
-    this.onChange = this.props.updateDate
-  }
 
-  render() {
-    return (
-      <div>
-        <div className="calendar">
-          <Cal
+
+
+
+
+
+
+
+
             calendarType={this.calendarType}
             onChange={this.onChange}
             value={this.state.date}
           />
-        </div>
-      </div>
-    );
-  }
-}
-
-class App extends Component {
-  displayDate(){
-    alert(this.date);
-  }
-
-  updateDate(newDate){
-    this.setState({
-      date: newDate
-    });
-  }
-
-
-  state = {
-    date: new Date(),
-  }
-
-
-  render() {
-    console.log(this.state.date)
-    return (
-      <div>
-        <div className="calendar">
-          <Calendar
-          calendarType = "US"
-          date = {this.state.date}
-          changeDate={this.updateDate}
           />
-        </div>
-
-        <div className="note">
+          <Cal
+          <Calendar
           <Note displayDate={this.displayDate}/>
+          calendarType = "US"
+          changeDate={this.updateDate}
+          date = {this.state.date}
         </div>
+        </div>
+        </div>
+        <div className="calendar">
+        <div className="calendar">
+        <div className="note">
+        {this.props.date}
       </div>
+      </div>
+      </div>
+      <div>
+      <div>
+      <div>
+      date: newDate
+      date: props.date,
     );
+    );
+    );
+    alert(this.date);
+    console.log(this.state.date)
+    date: new Date(),
+    return (
+    return (
+    return(
+    super(props);
+    super(props);
+    this.calendarType = props.calendarType
+    this.onChange = date => this.setState({ date })
+    this.onChange = this.props.updateDate
+    this.setState({
+    this.state = {
+    }
+    });
+  constructor(props){
+  constructor(props){
+  displayDate(){
+  render() {
+  render() {
+  render(){
+  state = {
+  updateDate(newDate){
   }
-}
-
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+class App extends Component {
+class Calendar extends Component {
+class Note extends Component {
 export default App;
+import 'typeface-roboto';
+import React, { Component } from 'react';
+import {Calendar as Cal} from 'react-calendar';
+}
+}
+}
