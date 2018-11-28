@@ -3,6 +3,11 @@ import Note from './Note'
 import React, { Component } from 'react';
 import 'typeface-roboto';
 
+function dateToEpoch(thedate) {
+  thedate.setHours(0,0,0,0);
+  return thedate;
+}
+
 class App extends Component {
   updateDate=(newDate) => {
     this.setState({
@@ -11,7 +16,7 @@ class App extends Component {
   }
 
   state={
-    date: new Date(),
+    date: dateToEpoch(new Date()),
   }
 
   render() {

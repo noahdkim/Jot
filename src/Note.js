@@ -2,23 +2,41 @@ import React, { Component } from 'react';
 import Item from './Item'
 
 class Note extends Component {
-  
+  state={
+    notes: [],
+  }
   handleKeyPress=(event) => {
     if(event.key === 'Enter'){
       console.log(event.target.id);
+      var newNotes = this.state.notes;
+      newNotes.push(newNotes.length);
+      this.setState({
+        notes:newNotes,
+      })
+      console.log(this.state.notes);
     }
   }
 
   componentDidUpdate(prevProps) {
     // Need to compare getTime otherwise always evaluates to True
     if (this.props.date.getTime() !== prevProps.date.getTime()) {
-      console.log(this.props.date);
+      console.log("componentDidUpdate prev:"+ prevProps.date);
+      console.log("componentDidUpdate :" + this.props.date);
     }
   }
 
+  componentDidMount(){
+    console.log("componentDidMount: " + this.props.date);
+    var newNotes = this.state.notes;
+    newNotes.push(newNotes.length);
+    this.setState({
+      notes:newNotes,
+    })
+  }
+
   render(){
-    const notes = [1, 2, 3, 4, 5];
-    const listItems = notes.map((note) =>
+    console.log("this.state.notes: " + this.state.notes);
+    const listItems = this.state.notes.map((note) =>
         <Item id={note} handleKeyPress={this.handleKeyPress} key={note.toString()}/>
     );
     return(

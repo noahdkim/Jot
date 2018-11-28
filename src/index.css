@@ -12,3 +12,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+input, select, textarea{
+    color: #FCF7F8;
+}
+
+textarea:focus, input:focus {
+    color: #FCF7F8;
+}
