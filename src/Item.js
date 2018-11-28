@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 
 class Item extends Component {
-
+  
   render(){
     return(
-      <p>
-        <label>
-        <div class="input-field inline">
-          <input type="checkbox" class="filled-in"/>
-          <span><input placeholder="Placeholder" id="first_name" type="text"/></span>
-        </div>
-        </label>
-      </p>
+      <label>
+      <div className="input-field inline">
+        <input type="checkbox" className="filled-in"/>
+        <span>
+          <input placeholder="Placeholder"
+                id={this.props.id}
+                type="text"
+                onKeyPress={this.props.handleKeyPress}
+                />
+          </span>
+      </div>
+      </label>
     );
   }
 

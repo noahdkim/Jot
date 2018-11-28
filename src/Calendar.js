@@ -4,16 +4,15 @@ import {Calendar as Cal} from 'react-calendar';
 class Calendar extends Component {
   constructor(props){
     super(props);
-    this.state = {
+    this.state={
       date: props.date,
     }
-    this.calendarType = props.calendarType
+    this.calendarType=props.calendarType
   }
 
-  onChange = date => this.props.changeDate(date)
+  onChange=date => this.props.changeDate(date)
 
   render() {
-    console.log("calendar date: " + this.state.date);
     return (
       <div>
         <div className="calendar">
