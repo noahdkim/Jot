@@ -13,10 +13,43 @@ code {
     monospace;
 }
 
-input, select, textarea{
-    color: #FCF7F8;
+html, body, #root, #root>div {
+  height: 100%
 }
 
-textarea:focus, input:focus {
-    color: #FCF7F8;
+
+.calendar {
+  margin-top: 10%;
+}
+
+.row {
+    padding: 10px;
+}
+
+.navBar {
+  padding-bottom: 5vh;
+}
+
+.note {
+  max-height: 50%;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

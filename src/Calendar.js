@@ -14,14 +14,12 @@ class Calendar extends Component {
 
   render() {
     return (
-      <div>
-        <div className="calendar">
-          <Cal
-            onChange={this.onChange}
-            calendarType={this.calendarType}
-            value={this.props.date}
-          />
-        </div>
+      <div className="calendar">
+        <Cal
+          onChange={this.onChange}
+          calendarType={this.calendarType}
+          value={this.props.date}
+        />
       </div>
     );
   }
