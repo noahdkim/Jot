@@ -4,7 +4,6 @@ import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
 import Item from './Item'
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 
 import React, { Component } from 'react';
 

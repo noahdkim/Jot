@@ -1,10 +1,10 @@
 import Checkbox from '@material-ui/core/Checkbox';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
-import Zoom from '@material-ui/core/Zoom';
 
 class Item extends Component {
   render(){
@@ -17,6 +17,11 @@ class Item extends Component {
         <TextField
         onKeyPress={this.props.addNewNote}
         />
+        <ListItemSecondaryAction>
+                      <IconButton aria-label="Delete">
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
       </ListItem>
 
     );
