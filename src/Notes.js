@@ -8,75 +8,103 @@ import List from '@material-ui/core/List';
 import React, { Component } from 'react';
 
 class Note extends Component {
-  state={
-    notes: [],
+  constructor(props){
+    super(props);
+    this.state=Note.loadSavedState(props.date);
   }
+
 
   addNewNote = (event) => {
     if(event.key === 'Enter' && event.target.value.length !== 0){
-      var newNotes = this.state.notes;
-      newNotes.push({
+      var newState = this.state;
+      newState.notes[this.props.date.toLocaleDateString()].push({
                       checked: false,
                       content:'',
                     });
+
       this.setState({
-        notes: newNotes,
+        newState,
       })
     }
   }
 
   checkboxOnClick = (value, id) => () => {
-    console.log(value, id);
-    var newNotes = this.state.notes;
-    newNotes[id].checked = !newNotes[id].checked;
-    this.setState({
-      notes: newNotes,
-    })
+    var newState = this.state;
+    newState.notes[this.props.date.toLocaleDateString()][id].checked = !value;
+    this.setState(newState);
   };
+
+  static loadSavedState = (date) => {
+    var monthYear = [date.getMonth()+1, date.getFullYear()].join('/');
+    var savedNotes = JSON.parse(localStorage.getItem(monthYear));
+    console.log(savedNotes);
+    var savedState = {};
+    savedState.date = date.toLocaleDateString();
+
+    // add a blank note at the end
+    if (!savedNotes) {
+      savedNotes = {};
+    }
+    if (savedNotes[date.toLocaleDateString()]) {
+      savedNotes[date.toLocaleDateString()].push({
+                      checked: false,
+                      content:'',
+                    });
+    } else {
+      // if there are no notes, add a new initial note
+      savedNotes[date.toLocaleDateString()] = [{
+                      checked: false,
+                      content:'',
+                    }]
+    }
+    savedState.notes=savedNotes;
+    console.log("savedState: " + JSON.stringify(savedState));
+    return savedState;
+  }
 
   updateItem = (e, id) => {
-    console.log(e.target.value);
-    console.log(id);
-    var newNotes = this.state.notes;
-    newNotes[id].content = e.target.value;
-    console.log("newNotes: " + JSON.stringify(newNotes));
-    this.setState({
-      notes: newNotes,
-    })
+    var newState = this.state;
+    console.log(newState);
+    newState.notes[this.props.date.toLocaleDateString()][id].content = e.target.value;
+    this.setState(newState)
   };
 
 
-  componentDidUpdate(prevProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     // Need to compare getTime otherwise always evaluates to True
-    if (this.props.date.getTime() !== prevProps.date.getTime()) {
-      localStorage.setItem(prevProps.date.getTime(), JSON.stringify(this.state));
-      var savedState = JSON.parse(localStorage.getItem(this.props.date.getTime()));
-      if (!savedState) {
-        savedState ={
-          notes: [{
-                          checked: false,
-                          content:'',
-                        }
-                  ],
-        };
+    var prevDate = new Date(prevState.date);
+    console.log("state: " + JSON.stringify(prevState));
+    if (prevDate.getTime() === nextProps.date.getTime()){
+      return prevState;
+    }
+    // if the month or year change, save the state
+    if (prevDate.getMonth() !== nextProps.date.getMonth() ||
+          prevDate.getYear() !== nextProps.date.getYear()) {
+      console.log("month change");
+      localStorage.setItem([prevDate.getMonth()+1, prevDate.getFullYear()].join('/'),
+                            JSON.stringify(prevState.notes));
+      return (Note.loadSavedState(nextProps.date));
+    } else {
+      // otherwise just change the date
+      var newState = prevState;
+      console.log("no change in month");
+      newState.date = nextProps.date.toLocaleDateString();
+      if (!newState.notes[newState.date]){
+        newState.notes[newState.date] = [{
+                        checked: false,
+                        content:'',
+                      }]
       }
-      this.setState(savedState)
+      return newState;
     }
   }
 
   componentDidMount(){
-    var newNotes = this.state.notes;
-    newNotes.push({
-                    checked: false,
-                    content:'',
-                  });
-    this.setState({
-      notes:newNotes,
-    })
+    this.setState(Note.loadSavedState(this.props.date));
   }
 
   render(){
-    const listItems = this.state.notes.map((note, index) =>
+    const listItems = this.state.notes[this.props.date.toLocaleDateString()].map((note, index) =>
         <Item
           id={index}
           checked={note.checked}
