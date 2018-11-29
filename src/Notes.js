@@ -12,17 +12,6 @@ class Note extends Component {
     notes: [],
   }
 
-  checkboxOnClick = (value, id) => () => {
-    console.log(value, id);
-    var newNotes = this.state.notes;
-    newNotes[id].checked = !newNotes[id].checked;
-    this.setState({
-      notes: newNotes,
-    })
-
-
-  };
-
   addNewNote = (event) => {
     if(event.key === 'Enter' && event.target.value.length !== 0){
       var newNotes = this.state.notes;
@@ -33,13 +22,45 @@ class Note extends Component {
       this.setState({
         notes: newNotes,
       })
-      console.log(this.state.notes);
     }
   }
+
+  checkboxOnClick = (value, id) => () => {
+    console.log(value, id);
+    var newNotes = this.state.notes;
+    newNotes[id].checked = !newNotes[id].checked;
+    this.setState({
+      notes: newNotes,
+    })
+  };
+
+  updateItem = (e, id) => {
+    console.log(e.target.value);
+    console.log(id);
+    var newNotes = this.state.notes;
+    newNotes[id].content = e.target.value;
+    console.log("newNotes: " + JSON.stringify(newNotes));
+    this.setState({
+      notes: newNotes,
+    })
+  };
+
 
   componentDidUpdate(prevProps) {
     // Need to compare getTime otherwise always evaluates to True
     if (this.props.date.getTime() !== prevProps.date.getTime()) {
+      localStorage.setItem(prevProps.date.getTime(), JSON.stringify(this.state));
+      var savedState = JSON.parse(localStorage.getItem(this.props.date.getTime()));
+      if (!savedState) {
+        savedState ={
+          notes: [{
+                          checked: false,
+                          content:'',
+                        }
+                  ],
+        };
+      }
+      this.setState(savedState)
     }
   }
 
@@ -62,6 +83,8 @@ class Note extends Component {
           addNewNote={this.addNewNote}
           key={index}
           checkboxOnClick={this.checkboxOnClick}
+          updateItem={this.updateItem}
+          content={note.content}
         />
     );
 
