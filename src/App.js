@@ -58,7 +58,7 @@ class App extends Component {
 
   checkboxOnClick = (value, id) => () => {
     var newState = this.state;
-    newState.notes[this.props.date.toLocaleDateString()][id].checked = !value;
+    newState.notes[this.state.date][id].checked = !value;
     this.setState(newState);
   };
 
@@ -99,11 +99,12 @@ class App extends Component {
     var moreEmpty = true;
     while (moreEmpty){
       var lastPrevDateNotes = this.state.notes[prevDateString].pop();
+      console.log(lastPrevDateNotes);
       if (!lastPrevDateNotes){
         delete this.state.notes[prevDateString];
         moreEmpty = false;
       }
-      else if (lastPrevDateNotes.content.length !== 0){
+      else if (lastPrevDateNotes.content.length !== 0 || lastPrevDateNotes.checked){
         this.state.notes[prevDateString].push(lastPrevDateNotes);
         moreEmpty = false;
       }
