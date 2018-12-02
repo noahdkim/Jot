@@ -15,7 +15,7 @@ class Item extends Component {
         onClick={this.props.checkboxOnClick(this.props.checked, this.props.id)}
               />
         <TextField
-          onKeyPress={this.props.addNewNote}
+          onKeyPress={this.props.handleItemKeypress}
           onChange={(e)=>this.props.updateItem(e, this.props.id)}
           value={this.props.content}
 
