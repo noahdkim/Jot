@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
-import Item from './Item'
+import Task from './Task'
 import List from '@material-ui/core/List';
 
 import React, { Component } from 'react';
@@ -11,7 +11,7 @@ class Note extends Component {
 
   render(){
     const listItems = this.props.notes[this.props.date].map((note, index) =>
-        <Item
+        <Task
           id={index}
           checked={note.checked}
           handleItemKeypress={this.props.handleItemKeypress}
@@ -19,6 +19,7 @@ class Note extends Component {
           checkboxOnClick={this.props.checkboxOnClick}
           updateItem={this.props.updateItem}
           content={note.content}
+          deleteNote={this.props.deleteNote}
         />
     );
 
@@ -43,7 +44,7 @@ class Note extends Component {
               {listItems}
           </List>
           <CardActions>
-            <Button size="small">Mark all complete</Button>
+            <Button size="small" onClick={this.props.markAllComplete}>Mark all complete</Button>
           </CardActions>
       </Card>
     </div>

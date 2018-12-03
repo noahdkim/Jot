@@ -32,36 +32,57 @@ class App extends Component {
     var currDate = dateToEpoch(new Date());
     this.state=App.loadSavedState(currDate);
 
+    // make sure notes are saved before leaving the page
+    window.addEventListener("beforeunload", (ev) =>
+      {
+        var date = new Date(this.state.date);
+        this.removeEmptyItems(this.state.date);
+        localStorage.setItem([date.getMonth()+1, date.getFullYear()].join('/'),
+                              JSON.stringify(this.state.notes));
+      });
   }
 
-  static addNewNote = (prevState, date) => {
+  // add a new note to the state
+  static addNewNote = (prevState, date, prevIndex) => {
     var newState = prevState;
     if (!newState.notes[date]){
       newState.notes[date] = [];
     }
-
-    newState.notes[date].push({
+    if (!prevIndex){
+      prevIndex = newState.notes[date].length-1;
+    }
+    var newNote = {
                     checked: false,
                     content:'',
-                  });
+                  }
+    newState.notes[date].splice(prevIndex+1, 0, newNote);
     return newState;
   }
 
-  handleItemKeypress = (event) => {
-      if(event.key === 'Enter' && event.target.value.length !== 0){
-        var newState = App.addNewNote(this.state, this.state.date);
-        this.setState({
-          newState,
-        })
-      }
-  }
-
+  // handle the checkbox click behavior
   checkboxOnClick = (value, id) => () => {
     var newState = this.state;
     newState.notes[this.state.date][id].checked = !value;
     this.setState(newState);
   };
 
+  deleteNote = (id) => () => {
+    if (this.state.notes[this.state.date].length > 1){
+      var newState = this.state;
+      newState.notes[this.state.date].splice(id, 1);
+      this.setState(newState);
+    }
+  }
+
+  // handle special keypresses
+  handleItemKeypress = (event, id) => {
+      if(event.key === 'Enter' && event.target.value.length !== 0){
+        var newState = App.addNewNote(this.state, this.state.date, id);
+        this.setState(newState);
+      }
+  }
+
+  // load saved notes from localStorage
   static loadSavedState = (date) => {
     var monthYear = [date.getMonth()+1, date.getFullYear()].join('/');
     var savedNotes = JSON.parse(localStorage.getItem(monthYear));
@@ -77,15 +98,32 @@ class App extends Component {
     return savedState;
   }
 
+  markAllComplete = () => {
+    var newState = this.state;
+    var newNotes = newState.notes[this.state.date];
+    newNotes.forEach((note)=> {
+      if (note.content.length > 0){
+        note.checked=true;
+      }
+    } );
+    this.setState(newState);
+  }
+
+  // Upon calendar changing date, update state and notes
+  updateDate=(newDate) => {
+    var prevDate = this.state.date;
+    var newState = this.state;
+    newState.date = newDate;
+    this.setState(newState);
+    this.updateNotes(prevDate);
+  }
+
+  // keep the item in state updated
   updateItem = (e, id) => {
     var newState = this.state;
     newState.notes[this.state.date][id].content = e.target.value;
     this.setState(newState)
   };
-
-  saveNotes(prevDate) {
-
-  }
 
   updateNotes(prevDateString) {
     var prevDate = new Date(prevDateString);
@@ -96,19 +134,7 @@ class App extends Component {
     }
 
     // Remove all empty items at the end of a list
-    var moreEmpty = true;
-    while (moreEmpty){
-      var lastPrevDateNotes = this.state.notes[prevDateString].pop();
-      console.log(lastPrevDateNotes);
-      if (!lastPrevDateNotes){
-        delete this.state.notes[prevDateString];
-        moreEmpty = false;
-      }
-      else if (lastPrevDateNotes.content.length !== 0 || lastPrevDateNotes.checked){
-        this.state.notes[prevDateString].push(lastPrevDateNotes);
-        moreEmpty = false;
-      }
-    }
+    this.removeEmptyItems(prevDateString);
 
     // if the month or year change, save the state
     if (prevDate.getMonth() !== this.state.date.getMonth() ||
@@ -136,27 +162,23 @@ class App extends Component {
     }
   }
 
-  componentDidMount(){
-    //this.setState(App.loadSavedState(this.props.date));
+  removeEmptyItems(date){
+    // Remove all empty items at the end of a list
+    var moreEmpty = true;
+    while (moreEmpty){
+      var dateFinalItem = this.state.notes[date].pop();
+      if (!dateFinalItem){
+        delete this.state.notes[date];
+        moreEmpty = false;
+      }
+      else if (dateFinalItem.content.length !== 0 || dateFinalItem.checked){
+        this.state.notes[date].push(dateFinalItem);
+        moreEmpty = false;
+      }
+    }
   }
-
-  componentWillUnmount() {
-    console.log("UNMOUNT: " + this.state);
-}
-
-  updateDate=(newDate) => {
-    console.log("updateDate");
-    var prevDate = this.state.date;
-    var newState = this.state;
-    newState.date = newDate;
-    this.setState(newState);
-    this.updateNotes(prevDate);
-  }
-
-
 
   render() {
-
     return (
       <div>
         <NavBar/>
@@ -171,10 +193,12 @@ class App extends Component {
           <Grid item xs={4}>
           <Notes
           date={this.state.date}
+          deleteNote={this.deleteNote}
           notes = {this.state.notes}
           checkboxOnClick={this.checkboxOnClick}
           handleItemKeypress={this.handleItemKeypress}
           updateItem={this.updateItem}
+          markAllComplete={this.markAllComplete}
           />
           </Grid>
         </Grid>
