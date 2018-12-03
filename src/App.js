@@ -48,7 +48,7 @@ class App extends Component {
     if (!newState.notes[date]){
       newState.notes[date] = [];
     }
-    if (!prevIndex){
+    if (isNaN(prevIndex)){
       prevIndex = newState.notes[date].length-1;
     }
     var newNote = {
