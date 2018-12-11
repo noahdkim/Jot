@@ -112,10 +112,13 @@ class App extends Component {
   // Upon calendar changing date, update state and notes
   updateDate=(newDate) => {
     var prevDate = this.state.date;
-    var newState = this.state;
-    newState.date = newDate;
-    this.setState(newState);
-    this.updateNotes(prevDate);
+    var newDateString = [newDate.getMonth()+1, newDate.getDate(), newDate.getFullYear()].join('/');
+    if(prevDate !== newDateString){
+      var newState = this.state;
+      newState.date = newDate;
+      this.setState(newState);
+      this.updateNotes(prevDate);
+    }
   }
 
   // keep the item in state updated
@@ -127,11 +130,6 @@ class App extends Component {
 
   updateNotes(prevDateString) {
     var prevDate = new Date(prevDateString);
-    var newDate = new Date(this.state.date);
-    // Need to compare getTime otherwise always evaluates to True
-    if (prevDate.getTime() === newDate.getTime()){
-      return;
-    }
 
     // Remove all empty items at the end of a list
     this.removeEmptyItems(prevDateString);

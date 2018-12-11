@@ -17,11 +17,9 @@ class Task extends Component {
 
 
   mouseEnter = () => {
-    console.log("enter");
     this.setState({ isMouseInside: true });
   }
   mouseLeave = () => {
-    console.log("exit");
     this.setState({ isMouseInside: false });
   }
 
